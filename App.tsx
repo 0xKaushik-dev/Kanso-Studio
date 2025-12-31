@@ -15,19 +15,19 @@ import StickyCTA from './components/StickyCTA';
 
 export default function App() {
   return (
-    <div className="relative min-h-screen w-full bg-white overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-white overflow-x-hidden fade-appear">
       <Header />
       <main className="flex flex-col w-full">
-        <Hero />
-        <About />
-        <WhyUs />
-        <Services />
-        <Gear />
-        <Process />
-        <Pricing />
-        <Testimonials />
-        <FAQ />
-        <Blog />
+        <section className="fade-appear"><Hero /></section>
+        <section className="fade-appear"><About /></section>
+        <section className="fade-appear"><WhyUs /></section>
+        <section className="fade-appear"><Services /></section>
+        <section className="fade-appear"><Gear /></section>
+        <section className="fade-appear"><Process /></section>
+        <section className="fade-appear"><Pricing /></section>
+        <section className="fade-appear"><Testimonials /></section>
+        <section className="fade-appear"><FAQ /></section>
+        <section className="fade-appear"><Blog /></section>
       </main>
       <Footer />
       <StickyCTA />
