@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aura® Production — Cinematic Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"DM Sans"', 'sans-serif'],
+              serif: ['"DM Serif Display"', 'serif'],
+            },
+            colors: {
+              'kanso-black': '#111111',
+              'kanso-gray': '#F5F5F5',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        cursor: none; /* Hide default cursor for custom one */
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #111;
+        border-radius: 10px;
+      }
+
+      /* Film Grain Overlay */
+      .grain {
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 9999;
+        animation: grain 8s steps(10) infinite;
+      }
+
+      @keyframes grain {
+        0%, 100% { transform:translate(0, 0) }
+        10% { transform:translate(-5%, -10%) }
+        20% { transform:translate(-15%, 5%) }
+        30% { transform:translate(7%, -25%) }
+        40% { transform:translate(-5%, 25%) }
+        50% { transform:translate(-15%, 10%) }
+        60% { transform:translate(15%, 0%) }
+        70% { transform:translate(0%, 15%) }
+        80% { transform:translate(3%, 35%) }
+        90% { transform:translate(-10%, 10%) }
+      }
+
+      /* Premium Reveal Animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px) skewY(2deg);
+        transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform, opacity;
+      }
+
+      .reveal.revealed {
+        opacity: 1;
+        transform: translateY(0) skewY(0deg);
+      }
+
+      .reveal-scale {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .reveal-scale.revealed {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* Magnetic Cursor Styles */
+      #custom-cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background-color: #111;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+        transform: translate(-50%, -50%);
+      }
+
+      #custom-cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.25s ease-out;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Hover States for Cursor */
+      .cursor-hover #custom-cursor {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(0,0,0,0.05);
+        backdrop-filter: blur(2px);
+      }
+
+      .cursor-hover #custom-cursor-follower {
+        transform: translate(-50%, -50%) scale(1.5);
+        border-color: rgba(0,0,0,0.3);
+      }
+
+      /* Light/Dark dynamic cursor */
+      .is-dark #custom-cursor {
+        background-color: white;
+      }
+      .is-dark #custom-cursor-follower {
+        border-color: rgba(255,255,255,0.2);
+      }
+
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.25s; }
+      .reveal-delay-3 { transition-delay: 0.4s; }
+      .reveal-delay-4 { transition-delay: 0.55s; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+</head>
+  <body class="bg-white text-kanso-black antialiased font-sans">
+    <div class="grain"></div>
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-follower"></div>
+    <div id="root"></div>
+    <script>
+      // Enhanced Intersection Observer
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      function observeNewElements() {
+        const elements = document.querySelectorAll('.reveal:not(.revealed), .reveal-scale:not(.revealed)');
+        elements.forEach(el => observer.observe(el));
+      }
+
+      // Cursor Logic
+      const cursor = document.getElementById('custom-cursor');
+      const follower = document.getElementById('custom-cursor-follower');
+      
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        
+        // Slight lag for follower
+        requestAnimationFrame(() => {
+          follower.style.left = e.clientX + 'px';
+          follower.style.top = e.clientY + 'px';
+        });
+      });
+
+      // Cursor hover detection
+      document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('a, button, .cursor-pointer');
+        if (target) {
+          document.body.classList.add('cursor-hover');
+        }
+
+        // Dark section detection
+        const darkSection = e.target.closest('.bg-kanso-black');
+        if (darkSection) {
+          document.body.classList.add('is-dark');
+        } else {
+          document.body.classList.remove('is-dark');
+        }
+      });
+
+      document.addEventListener('mouseout', (e) => {
+        const target = e.target.closest('a, button, .cursor-pointer');
+        if (target) {
+          document.body.classList.remove('cursor-hover');
+        }
+      });
+
+      window.addEventListener('load', () => {
+        observeNewElements();
+        const mutationObserver = new MutationObserver(() => {
+          observeNewElements();
+        });
+        mutationObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+      });
+    </script>
+  </body>
+</html>
